@@ -82,5 +82,6 @@ public class MonthlyMessageStatsService {
         response.put("current_month_count", currentMonthCount);
 
         return response;
+        
     }
 }
