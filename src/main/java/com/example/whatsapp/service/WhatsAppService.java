@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.whatsapp.utils.SessionManager;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Service
@@ -38,5 +39,54 @@ public class WhatsAppService {
         }
         
         return res;
+    }
+    
+    /** 🔄 Reset WhatsApp Session */
+    public Object resetSession(String clientId) {
+        String url = WHATSAPP_API + "/resetSession/" + clientId;
+        return restTemplate.getForObject(url, Object.class);
+    }
+    
+//    public byte[] getFileData() {
+//    	byte[] fileData = downloadContacts(SessionManager.getInstance().getUsername());
+//    	
+//    	//write login here
+//    	return fileData;
+//    }
+    
+    public byte[] getFileData() {
+        byte[] fileData = downloadContacts(SessionManager.getInstance().getUsername());
+
+        if (fileData == null || fileData.length == 0) {
+            return fileData;
+        }
+
+        String csvData = new String(fileData, StandardCharsets.UTF_8);
+        String[] lines = csvData.split("\\r?\\n");
+
+        StringBuilder cleanedCsv = new StringBuilder();
+        cleanedCsv.append("number\n");
+
+        for (int i = 1; i < lines.length; i++) {
+            String[] cols = lines[i].split(",");
+            if (cols.length >= 4) {
+                String number = cols[3].replace("\"", "").replace("@c.us", "").trim();
+                // Wrap in quotes to prevent scientific notation in Excel
+                cleanedCsv.append("\"").append(number).append("\"\n");
+            }
+        }
+
+        return cleanedCsv.toString().getBytes(StandardCharsets.UTF_8);
+    }
+
+
+    
+
+    /** 📥 Download contacts CSV as byte[] */
+    public byte[] downloadContacts(String clientId) {
+        String url = WHATSAPP_API + "/downloadContacts/" + clientId;
+        byte[] fileData = restTemplate.getForObject(url, byte[].class);
+
+        return fileData;
     }
 }

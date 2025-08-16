@@ -63,7 +63,7 @@
 		    });
 			
 			$.ajax({
-			     url: '/api/stats/summary',
+			     url: prod_url + '/api/stats/summary',
 			     method: 'GET',
 			     dataType: 'json',
 			     success: function (response) {
@@ -114,7 +114,7 @@
 			$('#whatsappIcon').click(function () {
 			    $('.nav-icon').removeClass('active');
 			    $(this).addClass('active');
-			    $('#mainContent').load('/whatsapp');  // Not .jsp!
+			    $('#mainContent').load(prod_url +'/whatsapp');  // Not .jsp!
 			});
 			
 			$('#home_logo').click(function () {
@@ -123,7 +123,7 @@
 			});
 		
 			$('#logout-button').click(function () {
-			    window.location.href = "/login";
+			    window.location.href =prod_url + "/login";
 			});
 	
 	});

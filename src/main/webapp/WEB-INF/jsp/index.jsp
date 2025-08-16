@@ -138,7 +138,7 @@
 		               success: function(response) {
 		                   $('.spinner-container').hide();
 		                   if (response === "Success") {
-		                       window.location.href = "/home";
+		                       window.location.href = prod_url +"/home";
 		                   } else {
 		                       $('#login-msg').text(response).css("color", "red");
 		                   }

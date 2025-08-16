@@ -1,6 +1,7 @@
 package com.example.whatsapp.restcontroller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +56,32 @@ public class WhatsappController {
         }
 
     }
+    
+    
+    // ✅ Reset WhatsApp session
+    @GetMapping("/reset/")
+    public Object resetSession() {
+        return whatsAppService.resetSession(SessionManager.getInstance().getUsername());
+    }
+
+    // ✅ Download contacts as CSV
+    @GetMapping("/downloadContacts/")
+    public ResponseEntity<byte[]> downloadContacts() {
+    	//whatsAppService.downloadContacts(SessionManager.getInstance().getUsername());
+    	
+    	 byte[] fileData = whatsAppService.getFileData(); // Your service call
+
+    	    if (fileData == null || fileData.length == 0) {
+    	        return ResponseEntity.notFound().build();
+    	    }
+
+    	    return ResponseEntity.ok()
+    	            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=contacts.csv")
+    	            .header(HttpHeaders.CONTENT_TYPE, "text/csv; charset=UTF-8")
+    	            .body(fileData);
+    	
+    }
+    
+    
 }
 

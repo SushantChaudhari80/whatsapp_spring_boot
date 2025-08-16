@@ -80,6 +80,12 @@ public class UserPlan {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+	@Override
+	public String toString() {
+		return "UserPlan [id=" + id + ", planType=" + planType + ", messageCount=" + messageCount + ", createdAt="
+				+ createdAt + ", updatedAt=" + updatedAt + "]";
+	}
     
     
     
