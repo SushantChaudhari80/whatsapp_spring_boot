@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.whatsapp.request.LoginRequest;
 import com.example.whatsapp.service.CustomUserDetailsService;
-import com.example.whatsapp.utils.SessionManager;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/whatsapp/")
@@ -20,22 +21,27 @@ public class UserLoginController {
 	private CustomUserDetailsService userService;
 	
 	@GetMapping("/validate/session")
-	public String getSession() {
-		if(SessionManager.getInstance().getUsername() != null) {
-			return "Loged in as "+SessionManager.getInstance().getUsername();
-		}else {
+	public String getSession(HttpSession session) {
+		String username = (String) session.getAttribute("username");
+		if (username != null) {
+			return "Loged in as " + username;
+		} else {
 			return "Invalid Session";
 		}
 	}
 	
 	@PostMapping("/reset/session")
-	public void resetSession() {
-		SessionManager.getInstance().setUsername(null);
+	public void resetSession(HttpSession session) {
+		session.invalidate();
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest) {
-	    return ResponseEntity.ok(userService.login(loginRequest.getUsername(), loginRequest.getPassword()));
+	public ResponseEntity<String> loginUser(@RequestBody LoginRequest loginRequest, HttpSession session) {
+		String result = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+		if ("Success".equals(result)) {
+			session.setAttribute("username", loginRequest.getUsername());
+		}
+		return ResponseEntity.ok(result);
 	}
 
 }

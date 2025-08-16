@@ -9,17 +9,20 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.whatsapp.entity.User;
 import com.example.whatsapp.service.CustomUserDetailsService;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
 @RequestMapping("/api/whatsapp")
 public class UserController {
-	
+	 
 	@Autowired
 	private CustomUserDetailsService userService;
 
 	
 	@GetMapping("/user/details")
-	public ResponseEntity<User> getUserDetails(){
-		return ResponseEntity.ok(userService.getUserDetails());
+	public ResponseEntity<User> getUserDetails(HttpSession session){
+		 String username = (String) session.getAttribute("username");
+		return ResponseEntity.ok(userService.getUserDetails(username));
 	}
 	
 }

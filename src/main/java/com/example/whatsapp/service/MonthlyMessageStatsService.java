@@ -16,7 +16,6 @@ import com.example.whatsapp.entity.UserPlan;
 import com.example.whatsapp.repository.MonthlyMessageStatsRepository;
 import com.example.whatsapp.repository.UserPlanRepository;
 import com.example.whatsapp.repository.UserRepository;
-import com.example.whatsapp.utils.SessionManager;
 
 
 @Service
@@ -54,8 +53,7 @@ public class MonthlyMessageStatsService {
         repository.save(stats);
     }
     
-    public Map<String, Object> getUserMessageSummary() {
-    	String username=SessionManager.getInstance().getUsername();
+    public Map<String, Object> getUserMessageSummary(String username) {
         List<MonthlyMessageStats> allStats = repository.findAllByUserId(username);
 
         int totalCount = 0;
@@ -85,6 +83,4 @@ public class MonthlyMessageStatsService {
 
         return response;
     }
-    
-   
 }
